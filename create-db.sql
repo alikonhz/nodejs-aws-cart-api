@@ -33,3 +33,4 @@ CREATE TABLE orders
     CONSTRAINT pk_orders PRIMARY KEY (id),
     CONSTRAINT fk_orders_ref_carts FOREIGN KEY (cart_id) REFERENCES carts (id)
 );
+

@@ -2,38 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
 
 import { Order } from '../models';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class OrderService {
-  private orders: Record<string, Order> = {}
-
-  findById(orderId: string): Order {
-    return this.orders[ orderId ];
+  constructor(    
+    private dataSource: DataSource) {
   }
 
-  create(data: any) {
-    const id = v4()
-    const order = {
-      ...data,
-      id,
-      status: 'inProgress',
-    };
-
-    this.orders[ id ] = order;
-
-    return order;
+  async findById(orderId: string): Promise<Order> {
+    return await this.dataSource.transaction(async (em) => {
+      return em.findOneBy(Order, {
+        id: orderId
+      })
+    });
   }
 
-  update(orderId, data) {
+  async update(orderId, data): Promise<Order> {
     const order = this.findById(orderId);
 
     if (!order) {
       throw new Error('Order does not exist.');
     }
 
-    this.orders[ orderId ] = {
-      ...data,
-      id: orderId,
-    }
+    return await this.dataSource.transaction(async (em) => {
+      const updatedOrder: Order = {
+        ...data,
+        id: orderId,
+      };
+      em.save(updatedOrder);
+
+      return updatedOrder;
+    });
   }
 }
