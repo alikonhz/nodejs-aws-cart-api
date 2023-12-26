@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ColumnType } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ColumnType, OneToMany, ManyToMany, ManyToOne, JoinColumn, Relation } from 'typeorm';
 
 export type CartStatusType = 'OPEN' | 'ORDERED';
 
@@ -14,7 +14,7 @@ export type Product = {
 })
 export class CartItem {
 
-  @PrimaryColumn({type: 'uuid'})
+  @PrimaryColumn({type: 'uuid', name: 'cart_id'})
   cart_id: string;
 
   @PrimaryColumn({type: 'uuid'})
@@ -22,6 +22,10 @@ export class CartItem {
 
   @Column()
   count: number;
+
+  @ManyToOne(() => Cart, (cart) => cart.items)
+  @JoinColumn({ name: 'cart_id' })
+  cart: Relation<Cart>;
 }
 
 @Entity({
@@ -48,5 +52,48 @@ export class Cart {
   })
   status: CartStatusType;
 
+  @OneToMany(() => CartItem, (ci) => ci.cart, { cascade: true })
   items: CartItem[];
+
+  @OneToMany(() => Order, (o) => o.cart)
+  orders: Order[];
+}
+
+export type PaymentType = {
+  provider: string,
+};
+
+export type DeliveryType = {
+  provider: string,
+};
+
+@Entity({ name: 'orders' })
+export class Order {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  user_id: string;
+
+  @Column()
+  cart_id: string;
+
+  @Column({ type: 'jsonb' })
+  payment: PaymentType;
+
+  @Column({ type: 'jsonb' })
+  delivery: DeliveryType;
+
+  @Column()
+  comments: string;
+
+  @Column()
+  status: string;
+
+  @Column()
+  total: number;
+
+  @ManyToOne(() => Cart, (cart) => cart.orders)
+  @JoinColumn({ name: 'cart_id' })
+  cart: Relation<Cart>;
 }

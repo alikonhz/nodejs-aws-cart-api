@@ -15,11 +15,20 @@ export class CartService {
   }
 
   async findByUserIdTx(em: EntityManager, userId: string): Promise<Cart> {
-    const cart = await em.findOneBy(Cart, {
-      user_id: userId
+    const carts = await em.find(Cart, {
+      where: {
+        user_id: userId,
+      },
+      relations: {
+        items: true,
+      }
     });
 
-    return cart;
+    if (!carts || carts.length == 0) {
+      return null;
+    }
+
+    return carts[0];
   }
 
   async createByUserIdTx(em: EntityManager, userId: string): Promise<Cart> {
@@ -56,16 +65,11 @@ export class CartService {
 
   async updateByUserId(userId: string, { items }: Cart): Promise<Cart> {
     return await AppDataSource.transaction(async (em) => {
-      const { id, ...rest } = await this.findOrCreateByUserIdTx(em, userId);
-      const updatedCart = {
-        id,
-        ...rest,
-        items: [ ...items ],
-      };
-      await em.save(updatedCart);
+      const cart = await this.findOrCreateByUserIdTx(em, userId);
+      cart.items = items;
+      await em.save(cart);
 
-      // ???
-      return { ...updatedCart };
+      return cart;
     });
   }
 

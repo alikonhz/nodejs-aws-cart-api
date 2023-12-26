@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Cart, CartItem } from './cart';
+import { Cart, CartItem, Order } from './cart';
 
 export const AppDataSource = new DataSource({
     type: 'postgres',
@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
     database: process.env.PG_DBNAME,
     synchronize: true,
     logging: true,
-    entities: [Cart, CartItem],
+    entities: [Cart, CartItem, Order],
     subscribers: [],
     migrations: [],
     ssl: true,
