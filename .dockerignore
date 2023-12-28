@@ -1,0 +1,8 @@
+# node_modules will be restored 
+node_modules
+
+# skip AWS cdk folder
+cdk
+
+# skip tests
+test
