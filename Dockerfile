@@ -16,6 +16,7 @@ ENV NODE_ENV=${NODE_ENV}
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/package.json .
 COPY --from=builder /usr/src/app/package-lock.json .
+COPY --from=builder /usr/src/app/*.pem ./dist
 RUN npm cache clean --force
 RUN npm ci --only=production
 

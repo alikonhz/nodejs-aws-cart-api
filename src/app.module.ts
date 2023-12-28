@@ -8,6 +8,8 @@ import { OrderModule } from './order/order.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cart, CartItem, Product } from './cart/models';
 import { Order } from './order';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -27,8 +29,9 @@ import { Order } from './order';
       subscribers: [],
       migrations: [],
       ssl: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+        ca: readFileSync(join(__dirname, 'us-east-1-bundle.pem')).toString(),
+      },
   })
   ],
   controllers: [
