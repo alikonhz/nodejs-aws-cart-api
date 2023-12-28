@@ -26,7 +26,9 @@ import { Order } from './order';
       entities: [Cart, CartItem, Order, Product],
       subscribers: [],
       migrations: [],
-      ssl: true,
+      ssl: {
+        rejectUnauthorized: false
+      }
   })
   ],
   controllers: [
