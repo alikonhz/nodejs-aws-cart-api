@@ -6,6 +6,7 @@ import 'reflect-metadata';
 import { AppModule } from './app.module';
 
 const port = process.env.PORT || 3000;
+const host = process.env.HOST || '0.0.0.0';
 
 let server: Handler;
 
@@ -15,20 +16,19 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();
-  //await app.init();
 
-  //await app.listen(port);
-  const expressApp = app.getHttpAdapter().getInstance();
-  return serverlessExpress({ app: expressApp });
+  await app.listen(port, host);
+  // const expressApp = app.getHttpAdapter().getInstance();
+  // return serverlessExpress({ app: expressApp });
 }
 
-export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
-  server = server ?? (await bootstrap());
+// export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
+//   server = server ?? (await bootstrap());
 
-  console.log('event: ', JSON.stringify(event));
+//   console.log('event: ', JSON.stringify(event));
 
-  return server(event, context, callback);
-};
+//   return server(event, context, callback);
+// };
 
 bootstrap().then(() => {
   console.log('App is running on %s port', port);

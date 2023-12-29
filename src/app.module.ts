@@ -10,6 +10,8 @@ import { Cart, CartItem, Product } from './cart/models';
 import { Order } from './order';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
+
 
 @Module({
   imports: [
