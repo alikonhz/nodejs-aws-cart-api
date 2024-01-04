@@ -6,8 +6,12 @@ import { CartModule } from './cart/cart.module';
 import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Cart, CartItem, Product } from './cart/models';
+import { Cart, CartItem, Product, User } from './cart/models';
 import { Order } from './order';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
+
 
 @Module({
   imports: [
@@ -23,10 +27,13 @@ import { Order } from './order';
       database: process.env.PG_DBNAME,
       synchronize: false,
       logging: true,
-      entities: [Cart, CartItem, Order, Product],
+      entities: [Cart, CartItem, Order, Product, User],
       subscribers: [],
       migrations: [],
-      ssl: true,
+      ssl: {
+        rejectUnauthorized: false,
+        ca: readFileSync(join(__dirname, 'us-east-1-bundle.pem')).toString(),
+      },
   })
   ],
   controllers: [

@@ -1,6 +1,6 @@
 import { Controller, Get, Delete, Put, Body, Req, Post, UseGuards, HttpStatus, Query } from '@nestjs/common';
 
-// import { BasicAuthGuard, JwtAuthGuard } from '../auth';
+import { BasicAuthGuard } from '../auth';
 import { AppRequest, getUserIdFromRequest } from '../shared';
 
 import { calculateCartTotal } from './models-rules';
@@ -13,7 +13,7 @@ export class CartController {
   ) { }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Get()
   async findUserCart(@Req() req: AppRequest, @Query('userid') userId: string) {
     console.log('findUserCart: ', userId);
@@ -25,7 +25,7 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Put()
   async updateUserCart(@Req() req: AppRequest, @Query('userid') userId: string, @Body() body) { // TODO: validate body payload...
     const id = getUserIdFromRequest(req) ?? userId;
@@ -36,7 +36,7 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Delete()
   clearUserCart(@Req() req: AppRequest, @Query('userid') userId: string) {
     const id = getUserIdFromRequest(req) ?? userId;
@@ -49,7 +49,7 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Post('checkout')
   async checkout(@Req() req: AppRequest, @Query('userid') userId: string, @Body() body) {
     const id = getUserIdFromRequest(req) ?? userId;

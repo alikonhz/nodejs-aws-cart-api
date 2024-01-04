@@ -1,37 +1,34 @@
 import { NestFactory } from '@nestjs/core';
-import { ExpressAdapter } from '@nestjs/platform-express';
 import serverlessExpress from '@vendia/serverless-express';
 import { Callback, Context, Handler } from 'aws-lambda';
 import 'reflect-metadata';
 
-import helmet from 'helmet';
-
 import { AppModule } from './app.module';
-import { AppDataSource } from './data-source';
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
+const host = process.env.HOST || '0.0.0.0';
 
 let server: Handler;
 
 async function bootstrap() {
+  console.log('App initializing on %s port', port);
+  console.log('pg host: ', process.env.PG_HOST);
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();
-  await app.init();
 
-  await AppDataSource.initialize();
-  
-  const expressApp = app.getHttpAdapter().getInstance();
-  return serverlessExpress({ app: expressApp });
+  await app.listen(port, host);
+  // const expressApp = app.getHttpAdapter().getInstance();
+  // return serverlessExpress({ app: expressApp });
 }
 
-export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
-  server = server ?? (await bootstrap());
+// export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
+//   server = server ?? (await bootstrap());
 
-  console.log('event: ', JSON.stringify(event));
+//   console.log('event: ', JSON.stringify(event));
 
-  return server(event, context, callback);
-};
+//   return server(event, context, callback);
+// };
 
 bootstrap().then(() => {
   console.log('App is running on %s port', port);

@@ -1,0 +1,23 @@
+# Ignore node_modules & build files.
+node_modules
+npm-debug.log
+dist
+
+# skip AWS cdk folder
+cdk
+
+# Ignore test files.
+test
+coverage
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+
+# Ignore git files.
+.git
+.gitignore
+
+# Ignore docker files.
+Dockerfile
+docker-compose.yml
+.dockerignore

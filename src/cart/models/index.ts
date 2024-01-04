@@ -1,5 +1,5 @@
 import { Order } from 'src/order';
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ColumnType, OneToMany, ManyToMany, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ColumnType, OneToMany, ManyToMany, ManyToOne, JoinColumn, Relation, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export type CartStatusType = 'OPEN' | 'ORDERED';
 
@@ -71,9 +71,27 @@ export class Cart {
   })
   status: CartStatusType;
 
-  @OneToMany(() => CartItem, (ci) => ci.cart, { cascade: true })
+  @OneToMany(() => CartItem, (ci) => ci.cart, { cascade: true  })
   items: CartItem[];
 
   @OneToMany(() => Order, (o) => o.cart)
   orders: Order[];
+}
+
+@Entity({name: 'users'})
+export class User {
+  @PrimaryColumn({type: 'uuid'})
+  id: string;
+  
+  @Column()
+  login: string;
+
+  @Column()
+  password: string;
+
+  @CreateDateColumn({ type: 'timestamp', nullable: false })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', nullable: false })
+  updated_at: Date;
 }
