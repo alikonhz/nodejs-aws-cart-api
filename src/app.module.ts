@@ -6,7 +6,7 @@ import { CartModule } from './cart/cart.module';
 import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Cart, CartItem, Product } from './cart/models';
+import { Cart, CartItem, Product, User } from './cart/models';
 import { Order } from './order';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -27,7 +27,7 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.PG_DBNAME,
       synchronize: false,
       logging: true,
-      entities: [Cart, CartItem, Order, Product],
+      entities: [Cart, CartItem, Order, Product, User],
       subscribers: [],
       migrations: [],
       ssl: {
